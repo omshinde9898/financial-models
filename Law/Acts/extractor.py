@@ -1,20 +1,15 @@
 import os
-from PyPDF2 import PdfReader
+from langchain.document_loaders import PyPDFLoader
 
 
 def getPdfNames():
-    return os.listdir('./pdfs')
+    return os.listdir('./Acts/pdfs')
 
 def readPdf(path):
-    path = os.path.join('./pdfs',path)
-    pdf_reader = PdfReader(path)
+    path = os.path.join('./Acts/pdfs',path)
+    pdf_reader = PyPDFLoader(path)
 
-    bookText = []
-
-    for page_num in range(len(pdf_reader.pages)):
-        page = pdf_reader.pages[page_num]
-        text = page.extract_text()
-        bookText.append(text)
+    bookText = pdf_reader.load()
     
     return bookText
 
@@ -25,7 +20,7 @@ def getCopora():
     paths = getPdfNames()
     
     for path in paths:
-        corpora.append(readPdf(path))
+        corpora.extend(readPdf(path))
 
     return corpora
 
